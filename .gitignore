@@ -42,3 +42,6 @@ next-env.d.ts
 
 # El ejemplo sí se versiona; los .env reales no.
 !.env.example
+
+# Brief del proyecto: se mantiene en local, no se versiona.
+PROMPT.md
