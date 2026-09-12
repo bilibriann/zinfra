@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import type { Metadata } from 'next'
+import { assetPath } from '@/lib/assetPath'
 import { getAllServicios, getServicio } from '@/lib/servicios'
 import { ButtonLink } from '@/components/Button'
 import { Reveal } from '@/components/Reveal'
@@ -7,32 +9,18 @@ import { Reveal } from '@/components/Reveal'
 // Las 4 rutas se conocen en build: cualquier otro slug es 404, no una página vacía.
 export const dynamicParams = false
 
-// Cada familia es una banda a sangre. La rotación de tres mantiene la proporción
-// 60-30-10 del manual: dos secciones claras por cada una azul, y el naranja nunca
-// como fondo — solo en el ordinal y el bullet, que es su único papel.
-const TONOS = [
-  {
-    fondo: 'bg-background',
-    titulo: 'text-on-surface',
-    texto: 'text-on-surface-variant',
-    numero: 'text-accent',
-    regla: 'border-outline-variant',
-  },
-  {
-    fondo: 'bg-surface-container',
-    titulo: 'text-on-surface',
-    texto: 'text-on-surface-variant',
-    numero: 'text-accent',
-    regla: 'border-outline-variant',
-  },
-  {
-    fondo: 'bg-secondary',
-    titulo: 'text-on-secondary',
-    texto: 'text-white/80',
-    numero: 'text-accent',
-    regla: 'border-white/25',
-  },
-]
+// Cada familia es una ficha técnica: foto de catálogo, badges de cabecera con los
+// dos o tres datos que deciden la compra, y las especificaciones en filas de
+// campo/valor con cebra. Se hojea como el catálogo impreso y se escanea como una
+// tabla, que es como un comprador técnico lee.
+//
+// El naranja de marca no entra en la ficha. La 60-30-10 lo reserva para el 10% de
+// punto focal, y una tarjeta de datos densos no compite con el CTA: dentro de la
+// ficha manda el azul (#0e3b82 = --color-secondary, el alto del degradado del
+// wordmark) y la jerarquía la hace el contraste, no un segundo color.
+//
+// La primera familia va destacada a todo el ancho. Es la de mayor peso comercial y,
+// de paso, cuadra un número impar de tarjetas en dos columnas sin dejar hueco.
 
 export async function generateStaticParams() {
   const servicios = await getAllServicios()
@@ -46,7 +34,7 @@ export async function generateMetadata(
   const servicio = await getServicio(slug)
   if (!servicio) return {}
   return {
-    title: servicio.titulo,
+    title: servicio.tituloSeo,
     description: servicio.resumen,
     alternates: { canonical: `/${servicio.slug}/` },
   }
@@ -107,53 +95,139 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
         </section>
       )}
 
-      <section className="mx-auto max-w-7xl px-4 pt-16 md:px-12 lg:pt-24">
-        <Reveal>
-          <h2 className="text-headline-lg-mobile md:text-headline-lg text-on-surface">
-            Familias de producto
-          </h2>
-          <p className="text-body-md mt-3 max-w-2xl text-on-surface-variant">
-            Lo que sigue es el contenido del catálogo {servicio.marca}. Si buscas un
-            modelo que no aparece, escríbenos: lo cotizamos igual.
-          </p>
-        </Reveal>
-      </section>
+      <section className="bg-surface-container">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:px-12 lg:py-24">
+          <Reveal>
+            <h2 className="text-headline-lg-mobile md:text-headline-lg text-on-surface">
+              Familias de producto
+            </h2>
+            <p className="text-body-md mt-3 max-w-2xl text-on-surface-variant">
+              Lo que sigue es el contenido del catálogo {servicio.marca}. Si buscas un
+              modelo que no aparece, escríbenos: lo cotizamos igual.
+            </p>
+          </Reveal>
 
-      {servicio.familias.map((familia, i) => {
-        const tono = TONOS[i % TONOS.length]
-        return (
-          <section key={familia.nombre} className={tono.fondo}>
-            <div className="mx-auto max-w-7xl px-4 py-14 md:px-12 lg:py-20">
-              <Reveal>
-                <div className="grid gap-8 lg:grid-cols-[minmax(0,22rem)_1fr]">
-                  <div>
-                    <p className={`text-label-sm font-mono uppercase ${tono.numero}`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </p>
-                    <h3
-                      className={`text-headline-lg-mobile md:text-headline-lg mt-3 ${tono.titulo}`}
-                    >
-                      {familia.nombre}
-                    </h3>
-                  </div>
-                  <ul
-                    className={`grid gap-x-10 gap-y-3 border-t pt-6 sm:grid-cols-2 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10 ${tono.regla}`}
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {servicio.familias.map((familia, i) => {
+              const destacada = i === 0
+              return (
+                <Reveal
+                  key={familia.nombre}
+                  className={destacada ? 'md:col-span-2' : undefined}
+                  retraso={destacada ? 0 : (i % 2) * 90}
+                >
+                  <article
+                    className={`flex h-full overflow-hidden rounded-xl border border-outline-variant bg-background shadow-[0_1px_2px_rgba(14,59,130,0.04),0_8px_24px_-12px_rgba(14,59,130,0.15)] ${
+                      destacada ? 'flex-col lg:flex-row' : 'flex-col'
+                    }`}
                   >
-                    {familia.items.map((item) => (
-                      <li key={item} className={`text-body-md flex gap-2 ${tono.texto}`}>
-                        <span aria-hidden="true" className={tono.numero}>
-                          +
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        )
-      })}
+                    {familia.pieDeFoto && (
+                      <figure className={destacada ? 'lg:w-2/5 lg:shrink-0' : undefined}>
+                        {familia.imagenDisponible ? (
+                          <Image
+                            src={assetPath(familia.imagen)}
+                            alt={familia.pieDeFoto}
+                            width={704}
+                            height={528}
+                            className="aspect-[4/3] w-full object-cover lg:h-full"
+                          />
+                        ) : (
+                          // La foto la manda el cliente. Hasta entonces el hueco se
+                          // muestra rotulado: un vacío marcado es preferible a una
+                          // ficha que finge estar completa.
+                          <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 border-b border-dashed border-outline-variant bg-surface-container px-6 text-center lg:h-full">
+                            <span className="text-label-xs font-mono uppercase text-secondary">
+                              Foto pendiente
+                            </span>
+                            <span className="text-body-sm text-on-surface-variant">
+                              {familia.pieDeFoto}
+                            </span>
+                          </div>
+                        )}
+                      </figure>
+                    )}
+
+                    <div className="flex flex-1 flex-col p-6 md:p-8">
+                      <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
+                        <div className="min-w-0">
+                          <h3 className="text-headline-lg-mobile md:text-headline-lg text-on-surface">
+                            <span className="font-mono text-secondary">
+                              {String(i + 1).padStart(2, '0')}
+                            </span>
+                            <span aria-hidden="true" className="mx-3 font-normal text-outline-variant">
+                              |
+                            </span>
+                            {familia.nombre}
+                          </h3>
+                          {familia.subtitulo && (
+                            <p className="text-body-sm mt-2 max-w-prose text-on-surface-variant">
+                              {familia.subtitulo}
+                            </p>
+                          )}
+                        </div>
+
+                        {familia.destacados.length > 0 && (
+                          // Los badges alternan azul sólido y azul pastel para que el
+                          // primero —el dato que más pesa— gane sin recurrir a un
+                          // color nuevo. Van en el bloque de texto y no sobre la foto:
+                          // encima de una foto oscura, como la de conexiones, dejarían
+                          // de leerse.
+                          <ul className="flex flex-wrap gap-2 md:justify-end">
+                            {familia.destacados.map((dato, j) => (
+                              <li
+                                key={dato}
+                                className={`text-label-xs rounded-full px-3 py-1.5 font-mono uppercase ${
+                                  j === 0
+                                    ? 'bg-secondary text-on-secondary'
+                                    : 'bg-secondary-container text-on-secondary-container'
+                                }`}
+                              >
+                                {dato}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </header>
+
+                      <dl className="mt-6 overflow-hidden rounded-md border border-outline-variant">
+                        {familia.items.map((spec, j) => (
+                          <div
+                            key={spec.valor}
+                            className={`flex gap-3 border-l-[3px] border-secondary px-4 py-3 sm:gap-4 ${
+                              j % 2 === 1 ? 'bg-surface-container' : 'bg-background'
+                            }`}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="text-label-sm mt-0.5 shrink-0 font-mono text-secondary"
+                            >
+                              &gt;
+                            </span>
+                            <div className="min-w-0 flex-1 sm:flex sm:gap-4">
+                              {spec.campo && (
+                                <dt className="text-label-xs shrink-0 pt-0.5 font-semibold uppercase tracking-wider text-secondary sm:w-36">
+                                  {spec.campo}
+                                </dt>
+                              )}
+                              <dd
+                                className={`text-body-sm min-w-0 text-on-surface ${
+                                  spec.campo ? 'mt-1 sm:mt-0' : ''
+                                }`}
+                              >
+                                {spec.valor}
+                              </dd>
+                            </div>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  </article>
+                </Reveal>
+              )
+            })}
+          </div>
+        </div>
+      </section>
 
       <section className="degradado-marca text-on-primary">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 md:flex-row md:items-center md:justify-between md:px-12">

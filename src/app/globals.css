@@ -106,6 +106,12 @@
   --text-body-md--line-height: 1.6;
   --text-body-md--font-weight: 400;
 
+  /* Dato de ficha técnica. Único uso: la fila de especificación, donde 16px
+     desborda la tarjeta y 13px ya reprueba legibilidad en móvil. */
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--font-weight: 400;
+
   --text-label-sm: 12px;
   --text-label-sm--line-height: 1;
   --text-label-sm--letter-spacing: 0.05em;

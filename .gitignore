@@ -45,3 +45,8 @@ next-env.d.ts
 
 # Brief del proyecto: se mantiene en local, no se versiona.
 PROMPT.md
+
+# Fotos originales del proveedor: 349 MB de archivos de cámara. Son la fuente de
+# scripts/optimizar-fotos.mjs, no material publicable — todo lo que vive en public/
+# se sube al hosting tal cual.
+/assets-originales/
