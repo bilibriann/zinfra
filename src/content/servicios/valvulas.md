@@ -83,7 +83,7 @@ familias:
       - '260 °C'
       - 'AISI 316'
     imagen: /images/valvulas/aguja.webp
-    pieDeFoto: Válvula de aguja de alta presión para línea de instrumentación.
+    pieDeFoto: Válvula de aguja en acero inoxidable con manija en T.
     items:
       - campo: Series NVL, NV y NVH
         valor: '2.500, 6.000 y 10.000 PSIG respectivamente'
@@ -101,8 +101,8 @@ familias:
       - '250 PSIG'
       - '250 °C'
       - '12 – 220 V'
-    imagen: /images/valvulas/seguridad.webp
-    pieDeFoto: Válvula de seguridad en bronce con palanca de prueba.
+    imagen: /images/valvulas/solenoides.webp
+    pieDeFoto: Electroválvula W220 tipo pistón en acero inoxidable.
     items:
       - campo: Serie SVM
         valor: 'Bronce, 250 PSIG, 250 °C, 1/2" a 2" NPT'

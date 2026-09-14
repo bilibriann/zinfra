@@ -1,13 +1,10 @@
 @import 'tailwindcss';
 
-/* Las tres paradas del degradado vertical del wordmark en ZINFRA-LOGO.png, medidas
-   sobre el archivo: coronilla de las letras, cuerpo (la mediana de 154.086 píxeles
-   de trazo, o sea el azul que el ojo lee) y base. Son la fuente única de los azules
-   del sitio; los tokens de color y el gradiente salen todos de aquí. */
+/* El azul del sitio es el del hero, sólido: el cuerpo del wordmark (la mediana de
+   154.086 píxeles de trazo, o sea el azul que el ojo lee). Es el único azul; todo
+   token, borde, sombra y banda sale de aquí. */
 :root {
-  --marca-alto: #0e3b82;
   --marca-cuerpo: #0d2258;
-  --marca-base: #010e23;
 }
 
 @theme inline {
@@ -18,21 +15,12 @@
      Regla 60-30-10: 60% blanco y gris claro, 30% azul y gris carbón,
      10% naranja. El naranja es punto focal exclusivo: solo CTA y acentos. */
 
-  /* Azul Zinfra — el principal: header, hero, títulos, links, CTA y footer.
-     Es la mediana de los 154.086 píxeles de trazo del wordmark en ZINFRA-LOGO.png,
-     o sea el azul que el ojo lee en el logo. El #0e3b82 del manual corresponde sólo
-     a la coronilla del degradado y sale visiblemente más claro que la marca. */
+  /* Azul Zinfra — el del hero, único azul del sitio: hero, header, bandas, footer,
+     títulos, links, datos de ficha y CTA. Sin degradados. */
   --color-primary: var(--marca-cuerpo);
   --color-on-primary: #ffffff;
-  --color-primary-container: var(--marca-alto); /* hover: aclara hacia la coronilla */
-  --color-on-primary-container: #ffffff;
-
-  /* El alto del degradado del wordmark. Único otro azul del sistema: separa una
-     banda del principal sin inventar un color que no esté en el logo. */
-  --color-secondary: var(--marca-alto);
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #e7edf6; /* tinte claro del azul, solo fondos */
-  --color-on-secondary-container: #0e3b82;
+  /* Tinte claro del mismo azul, solo fondos (badges). Mezcla, no un azul nuevo. */
+  --color-primary-tint: color-mix(in srgb, var(--marca-cuerpo) 9%, white);
 
   /* Naranja Zinfra — el 10%: botones principales, resaltados e iconos clave.
      Su texto va en gris carbón: blanco sobre este naranja da 2.1:1 y reprueba AA. */
@@ -43,7 +31,7 @@
   --color-tertiary: #ff9c1a;
   --color-on-tertiary: #2a2a2a;
   --color-tertiary-container: #ffffff;
-  --color-on-tertiary-container: #0e3b82;
+  --color-on-tertiary-container: var(--marca-cuerpo);
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
@@ -64,9 +52,9 @@
   --color-surface-container-high: #eef1f4;
   --color-surface-container-highest: #e7ebef;
 
-  --color-outline: rgba(14, 59, 130, 0.14);
-  --color-outline-variant: rgba(14, 59, 130, 0.14);
-  --color-inverse-surface: var(--marca-cuerpo); /* footer: mismo azul del header */
+  --color-outline: color-mix(in srgb, var(--marca-cuerpo) 14%, transparent);
+  --color-outline-variant: color-mix(in srgb, var(--marca-cuerpo) 14%, transparent);
+  --color-inverse-surface: var(--marca-cuerpo);
   --color-inverse-on-surface: #ffffff;
   --color-inverse-primary: #ff9c1a;
   --color-whatsapp: #25d366; /* color de marca, impuesto por WhatsApp */
@@ -165,35 +153,6 @@ body {
   opacity: 0.12;
 }
 
-/* El header y el hero forman un solo descenso continuo, igual que el wordmark: el
-   header va de la coronilla al cuerpo en sus 80px, y el hero sigue del cuerpo a la
-   base. Partidos así no se ve costura entre ambos. */
-@utility degradado-cabecera {
-  background-image: linear-gradient(
-    180deg,
-    var(--marca-alto) 0%,
-    var(--marca-cuerpo) 100%
-  );
-}
-
-@utility degradado-continuo {
-  background-image: linear-gradient(
-    180deg,
-    var(--marca-cuerpo) 0%,
-    var(--marca-base) 100%
-  );
-}
-
-/* Bandas sueltas que no continúan de nada: recorren el degradado completo. */
-@utility degradado-marca {
-  background-image: linear-gradient(
-    180deg,
-    var(--marca-alto) 0%,
-    var(--marca-cuerpo) 55%,
-    var(--marca-base) 100%
-  );
-}
-
 @layer base {
   /* Lenis controla el scroll; el `smooth` nativo pelea con él. */
   html.lenis,
@@ -223,17 +182,17 @@ body {
 }
 
 @layer utilities {
-  /* ─── Sombras teñidas con el azul de marca (nunca negro puro) ─── */
+  /* ─── Sombras teñidas con el azul del hero (nunca negro puro) ─── */
   .sombra-suave {
-    box-shadow: 0 2px 8px rgba(4, 86, 132, 0.08);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--marca-cuerpo) 8%, transparent);
   }
 
   .sombra-media {
-    box-shadow: 0 4px 20px rgba(4, 86, 132, 0.12);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--marca-cuerpo) 12%, transparent);
   }
 
   .sombra-fuerte {
-    box-shadow: 0 8px 40px rgba(4, 86, 132, 0.18);
+    box-shadow: 0 8px 40px color-mix(in srgb, var(--marca-cuerpo) 18%, transparent);
   }
 
   /* ─── Scroll reveal (lo activa el componente Reveal) ─── */
@@ -286,13 +245,24 @@ body {
   @media (hover: hover) {
     .tarjeta-interactiva:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(4, 86, 132, 0.14);
-      border-color: rgba(4, 86, 132, 0.45);
+      box-shadow: 0 8px 32px color-mix(in srgb, var(--marca-cuerpo) 14%, transparent);
+      border-color: color-mix(in srgb, var(--marca-cuerpo) 45%, transparent);
     }
 
     /* Sobre fondo azul el borde tiene que aclararse, no oscurecerse. */
     .tarjeta-interactiva-oscura:hover {
       border-color: rgba(255, 255, 255, 0.65);
+    }
+  }
+
+  /* ─── Zoom de foto al pasar el cursor. El marco padre recorta con overflow ─── */
+  .foto-zoom {
+    transition: transform 0.5s ease-out;
+  }
+
+  @media (hover: hover) {
+    .foto-zoom:hover {
+      transform: scale(1.08);
     }
   }
 
@@ -419,10 +389,10 @@ body {
   /* ─── Ancla resaltada al llegar por enlace (#seccion) ─── */
   @keyframes pulsoDestino {
     0% {
-      box-shadow: 0 0 0 0 rgba(4, 86, 132, 0.45);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--marca-cuerpo) 45%, transparent);
     }
     100% {
-      box-shadow: 0 0 0 18px rgba(4, 86, 132, 0);
+      box-shadow: 0 0 0 18px color-mix(in srgb, var(--marca-cuerpo) 0%, transparent);
     }
   }
 
@@ -454,6 +424,7 @@ body {
     }
 
     .tarjeta-interactiva:hover,
+    .foto-zoom:hover,
     .item-interactivo:hover,
     .item-interactivo-oscuro:hover {
       transform: none;

@@ -1,4 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
+import { assetPath } from '@/lib/assetPath'
 import { getAllServicios } from '@/lib/servicios'
 import { ButtonLink } from '@/components/Button'
 import { Reveal } from '@/components/Reveal'
@@ -39,8 +41,8 @@ const TONOS_LINEA = [
     regla: 'border-outline-variant',
   },
   {
-    fondo: 'bg-secondary',
-    titulo: 'text-on-secondary',
+    fondo: 'bg-primary',
+    titulo: 'text-white',
     texto: 'text-white/80',
     acento: 'text-accent',
     enlace: 'text-accent',
@@ -55,7 +57,7 @@ const TONOS_LINEA = [
     regla: 'border-outline-variant',
   },
   {
-    fondo: 'degradado-marca',
+    fondo: 'bg-primary',
     titulo: 'text-white',
     texto: 'text-white/75',
     acento: 'text-accent',
@@ -63,6 +65,15 @@ const TONOS_LINEA = [
     regla: 'border-white/25',
   },
 ]
+
+// Foto de ejemplo a la izquierda, a tamaño moderado, y texto con características a
+// la derecha. En móvil se apilan: foto arriba. El marco lleva fondo blanco propio
+// porque las fotos de catálogo vienen sobre blanco y algunas bandas son azules, y
+// recorta el zoom del hover para que la foto no se salga.
+const GRILLA_LINEA = 'grid gap-8 lg:grid-cols-[24rem_1fr] lg:items-center lg:gap-16'
+
+const MARCO_FOTO =
+  'aspect-[4/3] w-full max-w-sm overflow-hidden rounded-lg border border-outline-variant bg-white'
 
 const DATOS_COTIZACION = [
   'Producto requerido',
@@ -77,7 +88,7 @@ export default async function Home() {
 
   return (
     <>
-      <section className="degradado-continuo text-on-primary">
+      <section className="bg-primary text-on-primary">
         <div className="mx-auto max-w-7xl px-4 py-20 md:px-12 lg:py-28">
           <Reveal>
             <p className="text-label-sm font-mono uppercase text-white/60">
@@ -122,14 +133,20 @@ export default async function Home() {
             >
               <div className="mx-auto max-w-7xl px-4 py-14 md:px-12 lg:py-20">
                 <Reveal>
-                  <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-                    <div>
-                      <p className={`text-label-sm font-mono uppercase ${tono.acento}`}>
-                        {String(i + 1).padStart(2, '0')} · {servicio.marca}
-                      </p>
-                      <h3
-                        className={`text-display md:text-display-md mt-3 ${tono.titulo}`}
-                      >
+                  <div className={GRILLA_LINEA}>
+                    {servicio.imagenDisponible && (
+                      <div className={MARCO_FOTO}>
+                        <Image
+                          src={assetPath(servicio.imagen)}
+                          alt={`Producto de la línea ${servicio.titulo}`}
+                          width={1200}
+                          height={900}
+                          className="foto-zoom h-full w-full object-contain"
+                        />
+                      </div>
+                    )}
+                    <div className="lg:col-start-2">
+                      <h3 className={`text-display md:text-display-md ${tono.titulo}`}>
                         {servicio.titulo}
                       </h3>
                       <p className={`text-body-md mt-4 max-w-xl ${tono.texto}`}>
@@ -146,22 +163,22 @@ export default async function Home() {
                           →
                         </span>
                       </span>
+                      <ul
+                        className={`mt-8 grid gap-2 border-t pt-6 sm:grid-cols-2 ${tono.regla}`}
+                      >
+                        {servicio.familias.map((familia) => (
+                          <li
+                            key={familia.nombre}
+                            className={`text-body-md flex gap-2 ${tono.texto}`}
+                          >
+                            <span aria-hidden="true" className={tono.acento}>
+                              +
+                            </span>
+                            <span>{familia.nombre}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul
-                      className={`grid gap-2 border-t pt-6 sm:grid-cols-2 ${tono.regla}`}
-                    >
-                      {servicio.familias.map((familia) => (
-                        <li
-                          key={familia.nombre}
-                          className={`text-body-md flex gap-2 ${tono.texto}`}
-                        >
-                          <span aria-hidden="true" className={tono.acento}>
-                            +
-                          </span>
-                          <span>{familia.nombre}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </Reveal>
               </div>
@@ -221,7 +238,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="degradado-marca text-on-primary">
+      <section className="bg-primary text-on-primary">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-12">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-xl">

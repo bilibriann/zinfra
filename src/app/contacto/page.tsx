@@ -24,7 +24,7 @@ export default function ContactoPage() {
 
   return (
     <>
-      <section className="degradado-continuo text-on-primary">
+      <section className="bg-primary text-on-primary">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-12">
           <Reveal>
             <h1 className="text-display md:text-display-md max-w-3xl">

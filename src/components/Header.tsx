@@ -76,10 +76,9 @@ export function Header({ servicios }: Props) {
       className={
         scrolled
           ? 'fixed top-0 z-50 w-full border-b border-outline-variant/50 bg-white/90 backdrop-blur-md transition-colors duration-300'
-          : // Primer tramo del degradado del wordmark: de la coronilla al cuerpo en
-            // sus 80px, y el hero lo continúa hasta la base. Sin alfa ni blur —
-            // cualquier transparencia aclara el azul y deja de ser el del logo.
-            'degradado-cabecera fixed top-0 z-50 w-full border-b border-white/10 transition-colors duration-300'
+          : // El mismo azul sólido del hero: header y hero se
+            // leen sin costura. Sin alfa ni blur — cualquier transparencia lo aclara.
+            'bg-primary fixed top-0 z-50 w-full border-b border-white/10 transition-colors duration-300'
       }
     >
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-12">
@@ -178,8 +177,8 @@ export function Header({ servicios }: Props) {
             href="/contacto"
             className={
               scrolled
-                ? 'rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-container hover:text-on-primary-container active:scale-95 md:px-6'
-                : 'rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-all hover:bg-primary-container hover:text-on-primary-container active:scale-95 md:px-6'
+                ? 'rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/85 active:scale-95 md:px-6'
+                : 'rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-all hover:bg-white/85 active:scale-95 md:px-6'
             }
           >
             Cotizar Ahora

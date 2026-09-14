@@ -18,6 +18,7 @@ familias:
       - '600 PSIG'
       - '426 °C'
       - 'TERMODINÁMICA'
+    imagen: /images/vapor/trampeo.webp
     pieDeFoto: Trampa termodinámica TD-52 en acero inoxidable.
     items:
       - campo: Trampa TD-52
@@ -34,7 +35,8 @@ familias:
       - '250 PSIG'
       - '250 °C'
       - 'AISI 304'
-    pieDeFoto: Válvula de seguridad en bronce con palanca de prueba.
+    imagen: /images/vapor/regulacion.webp
+    pieDeFoto: Válvula reductora de presión.
     items:
       - campo: Válvula SVM
         valor: 'Seguridad en bronce, 250 PSIG, 250 °C, 1/2" a 2" NPT'
@@ -66,6 +68,7 @@ familias:
       - '0-150 PSIG'
       - '180 °C'
       - 'BAJO CONSUMO 6 W'
+    imagen: /images/vapor/solenoides.webp
     pieDeFoto: Electroválvula W210 en bronce con bobina.
     items:
       - campo: W210 y W210-0
@@ -82,7 +85,8 @@ familias:
       - '1.000 RPM'
       - '145 PSIG'
       - 'ROTOR AISI 304'
-    pieDeFoto: Junta rotativa de doble flujo en latón.
+    imagen: /images/vapor/juntas-rotativas.webp
+    pieDeFoto: Junta rotativa serie HS en latón.
     items:
       - campo: Serie QS-G
         valor: 'Hierro fundido — vapor y agua caliente, 100 RPM, 18 kg/cm²'
@@ -98,7 +102,8 @@ familias:
       - 'IP65'
       - 'CLASE 1 EN 13190'
       - 'AISI 304/316'
-    pieDeFoto: Manómetro con sifón y termómetro bimetálico para línea de vapor.
+    imagen: /images/vapor/instrumentacion.webp
+    pieDeFoto: Manómetros con sifón y válvula en latón para línea de vapor.
     items:
       - campo: Manómetros
         valor: '05/40, 11/51, 15/51, 11/63, 15/63, OZ/63, 231/115 y DP-02'

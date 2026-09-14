@@ -5,7 +5,7 @@ import { CallIcon, MailIcon, ShareIcon, GlobeIcon } from '@/components/icons'
 
 export function Footer() {
   return (
-    <footer className="border-t-4 border-accent bg-inverse-surface py-20 text-white">
+    <footer className="border-t-4 border-accent bg-primary py-20 text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 md:grid-cols-4 md:px-12">
         <div className="space-y-8">
           <Link href="/" className="inline-block shrink-0">
