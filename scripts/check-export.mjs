@@ -47,11 +47,12 @@ if (!(await existe('.htaccess'))) {
   fallos.push('Falta out/.htaccess: /contacto y las demás rutas darán 404.')
 }
 
-// 2. basePath — si se construyó con GITHUB_PAGES=true los assets van a /marea-alta/.
+// 2. basePath — el build de la demo de GitHub Pages cuelga todo de /zinfra/, que
+// en el hosting definitivo (raíz del dominio) es un 404 en cada asset.
 const index = await readFile(path.join(OUT, 'index.html'), 'utf8')
-if (index.includes('/marea-alta/')) {
+if (index.includes('/zinfra/_next/')) {
   fallos.push(
-    'El build trae basePath /marea-alta/: se construyó con GITHUB_PAGES=true. Usa `npm run build` a secas.'
+    'El build trae basePath /zinfra: se construyó con NEXT_PUBLIC_BASE_PATH puesta, como en el workflow de Pages. Usa `npm run build` a secas.'
   )
 }
 

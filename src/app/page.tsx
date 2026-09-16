@@ -137,7 +137,7 @@ export default async function Home() {
                     {servicio.imagenDisponible && (
                       <div className={MARCO_FOTO}>
                         <Image
-                          src={assetPath(servicio.imagen)}
+                          src={servicio.imagen}
                           alt={`Producto de la línea ${servicio.titulo}`}
                           width={1200}
                           height={900}
@@ -205,7 +205,7 @@ export default async function Home() {
               {servicios.map((servicio) => (
                 <a
                   key={servicio.slug}
-                  href={servicio.catalogo}
+                  href={assetPath(servicio.catalogo)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-body-md rounded-md border border-outline-variant bg-background px-4 py-2 font-semibold text-primary transition-colors duration-200 hover:bg-surface-container-high"

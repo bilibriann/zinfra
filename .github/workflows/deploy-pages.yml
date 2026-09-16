@@ -1,0 +1,65 @@
+# Deploy provisorio a GitHub Pages, para revisar el sitio mientras se define el
+# hosting definitivo en HostGator. El sitio queda en
+# https://bilibriann.github.io/zinfra/
+#
+# Requisito de una sola vez: en el repo, Settings -> Pages -> Source = GitHub Actions.
+name: Deploy provisorio a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si entran dos pushes seguidos, publica el último y cancela el anterior.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Pages sirve el sitio en /zinfra/, no en la raíz. Sin esto los assets dan 404.
+      # Ojo: este build NO sirve para HostGator, que va en la raíz del dominio.
+      NEXT_PUBLIC_BASE_PATH: /zinfra
+      # Las NEXT_PUBLIC_* se hornean en el bundle. Si los secrets no están cargados
+      # llegan vacías y el formulario queda inerte: la demo se publica igual.
+      NEXT_PUBLIC_FORMS_ENDPOINT: ${{ secrets.NEXT_PUBLIC_FORMS_ENDPOINT }}
+      NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY }}
+      NEXT_PUBLIC_CONTACT_EMAIL: ${{ secrets.NEXT_PUBLIC_CONTACT_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      # Pages corre Jekyll, que descarta todo directorio que empiece con guion
+      # bajo: sin este archivo se come out/_next/ y el sitio llega sin JS ni CSS.
+      - run: touch out/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

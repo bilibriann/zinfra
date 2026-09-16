@@ -61,7 +61,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                 Solicitar cotización
               </ButtonLink>
               <a
-                href={servicio.catalogo}
+                href={assetPath(servicio.catalogo)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-md border border-white/30 px-8 py-3.5 text-base font-bold transition-colors duration-200 hover:bg-white/10"
@@ -108,7 +108,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                       >
                         {familia.imagenDisponible ? (
                           <Image
-                            src={assetPath(familia.imagen)}
+                            src={familia.imagen}
                             alt={familia.pieDeFoto}
                             width={704}
                             height={528}
