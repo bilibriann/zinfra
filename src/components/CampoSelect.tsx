@@ -1,12 +1,17 @@
 import CampoError from '@/components/CampoError'
 import CampoLabel from '@/components/CampoLabel'
-import { CONTROL, bordeCampo } from '@/components/campoClases'
+import { ALTO_CONTROL, CONTROL, bordeCampo } from '@/components/campoClases'
 
-type CampoSelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
+type CampoSelectProps = Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  'className'
+> & {
   id: string
   label: string
   error?: string
   opciones: { valor: string; etiqueta: string }[]
+  /** Va al contenedor, no al select: es donde el formulario declara cuántas columnas ocupa el campo. */
+  className?: string
 }
 
 export default function CampoSelect({
@@ -14,19 +19,20 @@ export default function CampoSelect({
   label,
   error,
   opciones,
+  className = '',
   ...props
 }: CampoSelectProps) {
   const idError = `${id}-error`
 
   return (
-    <div>
+    <div className={className}>
       <CampoLabel htmlFor={id}>{label}</CampoLabel>
       <select
         id={id}
         defaultValue=""
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? idError : undefined}
-        className={`${CONTROL} ${bordeCampo(Boolean(error))} h-[42px]`}
+        className={`${CONTROL} ${bordeCampo(Boolean(error))} ${ALTO_CONTROL}`}
         {...props}
       >
         <option value="" disabled>

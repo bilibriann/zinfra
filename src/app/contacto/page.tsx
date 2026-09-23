@@ -39,7 +39,7 @@ export default function ContactoPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-12 lg:py-24">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.3fr]">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <h2 className="text-headline-lg-mobile md:text-headline-lg text-on-surface">
               Escríbenos
@@ -111,7 +111,9 @@ export default function ContactoPage() {
             </dl>
           </div>
 
-          <div className="rounded-md border border-outline-variant bg-surface-container-low p-6 md:p-8">
+          {/* El panel va un tono por debajo del blanco para que los campos, que
+              sí son blancos, se lean como huecos donde se escribe. */}
+          <div className="rounded-md border border-outline-variant bg-surface-container p-8 md:p-10">
             <CotizacionForm />
           </div>
         </div>

@@ -89,7 +89,10 @@ export default function CotizacionForm() {
     : siteConfig.contacto.email
 
   return (
-    <form onSubmit={alEnviar} noValidate className="space-y-5">
+    // El paso entre bloques (32px) es mayor que el paso entre campos (20px): sin
+    // rótulos, ese salto es lo único que separa los datos de contacto de los del
+    // requerimiento.
+    <form onSubmit={alEnviar} noValidate className="space-y-8">
       <input
         type="text"
         name="botcheck"
@@ -132,20 +135,16 @@ export default function CotizacionForm() {
         />
       </div>
 
-      <CampoSelect
-        id="producto"
-        name="producto"
-        label="Producto requerido"
-        opciones={LINEAS}
-        error={errores.producto}
-      />
-
-      <div className="grid gap-5 sm:grid-cols-2">
-        <CampoTexto
-          id="marcaModelo"
-          name="marcaModelo"
-          label="Marca o modelo"
-          error={errores.marcaModelo}
+      {/* Tres columnas para que el ancho de cada campo diga cuánto se espera
+          escribir en él: una cantidad no merece lo mismo que una aplicación. */}
+      <div className="grid gap-5 sm:grid-cols-3">
+        <CampoSelect
+          id="producto"
+          name="producto"
+          label="Producto requerido"
+          opciones={LINEAS}
+          error={errores.producto}
+          className="sm:col-span-2"
         />
         <CampoTexto
           id="cantidad"
@@ -153,38 +152,51 @@ export default function CotizacionForm() {
           label="Cantidad"
           error={errores.cantidad}
         />
+        <CampoTexto
+          id="marcaModelo"
+          name="marcaModelo"
+          label="Marca o modelo"
+          error={errores.marcaModelo}
+        />
+        <CampoTexto
+          id="aplicacion"
+          name="aplicacion"
+          label="Aplicación"
+          error={errores.aplicacion}
+          className="sm:col-span-2"
+        />
+        <CampoTextarea
+          id="mensaje"
+          name="mensaje"
+          label="Requerimiento"
+          error={errores.mensaje}
+          className="sm:col-span-3"
+        />
       </div>
 
-      <CampoTexto
-        id="aplicacion"
-        name="aplicacion"
-        label="Aplicación"
-        error={errores.aplicacion}
-      />
+      <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-center sm:justify-between">
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={estado === 'enviando'}
+          className="w-full sm:w-auto"
+        >
+          {estado === 'enviando' ? 'Enviando…' : 'Enviar cotización'}
+        </Button>
 
-      <CampoTextarea
-        id="mensaje"
-        name="mensaje"
-        label="Requerimiento"
-        error={errores.mensaje}
-      />
-
-      <Button type="submit" variant="primary" disabled={estado === 'enviando'}>
-        {estado === 'enviando' ? 'Enviando…' : 'Enviar cotización'}
-      </Button>
-
-      <div role="status" aria-live="polite">
-        {estado === 'ok' && (
-          <p className="text-body-md font-semibold text-primary">
-            Recibimos tu requerimiento. Te respondemos a la brevedad.
-          </p>
-        )}
-        {estado === 'error' && (
-          <p className="text-body-md text-error">
-            {mensajeError}
-            {correoVisible && <> Escríbenos directo a {correoVisible}.</>}
-          </p>
-        )}
+        <div role="status" aria-live="polite" className="sm:flex-1">
+          {estado === 'ok' && (
+            <p className="text-body-sm font-semibold text-primary">
+              Recibimos tu requerimiento. Te respondemos a la brevedad.
+            </p>
+          )}
+          {estado === 'error' && (
+            <p className="text-body-sm text-error">
+              {mensajeError}
+              {correoVisible && <> Escríbenos directo a {correoVisible}.</>}
+            </p>
+          )}
+        </div>
       </div>
     </form>
   )
