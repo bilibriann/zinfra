@@ -9,18 +9,20 @@ import { Reveal } from '@/components/Reveal'
 // Las 4 rutas se conocen en build: cualquier otro slug es 404, no una página vacía.
 export const dynamicParams = false
 
-// Cada familia es una ficha técnica: foto de catálogo, badges de cabecera con los
-// dos o tres datos que deciden la compra, y las especificaciones en filas de
-// campo/valor con cebra. Se hojea como el catálogo impreso y se escanea como una
-// tabla, que es como un comprador técnico lee.
+// Cada familia es una franja de catálogo a todo el ancho: foto a un tercio con su
+// pie, badges con los dos o tres datos que deciden la compra, y las
+// especificaciones en dos columnas de campo/valor. La foto cambia de lado en cada
+// familia. Se hojea como el catálogo impreso y se escanea como una tabla, que es
+// como un comprador técnico lee.
+//
+// No son tarjetas: nada va encajonado ni ensombrecido. Lo único que separa una
+// familia de la siguiente es una línea de un píxel, que es lo que hace una hoja de
+// catálogo y no un tablero de fichas.
 //
 // El naranja de marca no entra en la ficha. La 60-30-10 lo reserva para el 10% de
-// punto focal, y una tarjeta de datos densos no compite con el CTA: dentro de la
+// punto focal, y un bloque de datos densos no compite con el CTA: dentro de la
 // ficha manda el azul (#0d2258 = --color-primary, el azul del hero) y la jerarquía
 // la hace el contraste, no un segundo color.
-//
-// La primera familia va destacada a todo el ancho. Es la de mayor peso comercial y,
-// de paso, cuadra un número impar de tarjetas en dos columnas sin dejar hueco.
 
 export async function generateStaticParams() {
   const servicios = await getAllServicios()
@@ -73,7 +75,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
         </div>
       </section>
 
-      <section className="bg-surface-container">
+      <section className="bg-background">
         {/* Más angosto que el resto del sitio: a ~1024px cada ficha (foto y datos)
             queda a una escala que se lee de un vistazo, sin dominar la página. */}
         <div className="mx-auto max-w-[70rem] px-4 py-16 md:px-12 lg:py-24">
@@ -87,52 +89,61 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
             </p>
           </Reveal>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="mt-12">
             {servicio.familias.map((familia, i) => {
-              const destacada = i === 0
+              // La foto cambia de lado en cada familia. Alternar es lo que evita que
+              // ocho franjas iguales se lean como una lista: el ojo vuelve al borde
+              // opuesto en cada una y reconoce dónde empieza la siguiente.
+              const fotoDerecha = i % 2 === 1
               return (
-                <Reveal
-                  key={familia.nombre}
-                  className={destacada ? 'md:col-span-2' : undefined}
-                  retraso={destacada ? 0 : (i % 2) * 90}
-                >
-                  <article
-                    className={`flex h-full overflow-hidden rounded-xl border border-outline-variant bg-background shadow-[0_1px_2px_color-mix(in_srgb,var(--color-primary)_4%,transparent),0_8px_24px_-12px_color-mix(in_srgb,var(--color-primary)_15%,transparent)] ${
-                      destacada ? 'flex-col lg:flex-row' : 'flex-col'
-                    }`}
-                  >
-                    {familia.pieDeFoto && (
-                      // overflow-hidden recorta el zoom del hover dentro del marco.
-                      <figure
-                        className={`overflow-hidden ${destacada ? 'lg:w-2/5 lg:shrink-0' : ''}`}
-                      >
-                        {familia.imagenDisponible ? (
-                          <Image
-                            src={familia.imagen}
-                            alt={familia.pieDeFoto}
-                            width={704}
-                            height={528}
-                            className="foto-zoom aspect-[4/3] w-full object-cover lg:h-full"
-                          />
-                        ) : (
-                          // La foto la manda el cliente. Hasta entonces el hueco se
-                          // muestra rotulado: un vacío marcado es preferible a una
-                          // ficha que finge estar completa.
-                          <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 border-b border-dashed border-outline-variant bg-surface-container px-6 text-center lg:h-full">
-                            <span className="text-label-xs font-mono uppercase text-primary">
-                              Foto pendiente
-                            </span>
-                            <span className="text-body-sm text-on-surface-variant">
+                <Reveal key={familia.nombre}>
+                  <article className="border-t border-outline-variant py-10 first:border-t-0 first:pt-0 md:py-14 md:first:pt-0">
+                    <div className="grid items-start gap-8 md:grid-cols-12 md:gap-10 lg:gap-12">
+                      {familia.pieDeFoto && (
+                        // El tope de ancho es para el móvil, donde la franja se apila:
+                        // sin él la foto pasa a ancho completo y queda más grande que
+                        // en la fila de al lado, que es lo contrario de lo que busca
+                        // una franja de catálogo.
+                        <figure
+                          className={`w-full max-w-[22rem] md:col-span-4 md:max-w-none ${fotoDerecha ? 'md:order-last' : ''}`}
+                        >
+                          {familia.imagenDisponible ? (
+                            // `contain` y no `cover`: la foto de catálogo ya viene
+                            // encuadrada a 4:3 sobre blanco y recortarla le cortaría
+                            // la brida o el volante al producto.
+                            <Image
+                              src={familia.imagen}
+                              alt={familia.pieDeFoto}
+                              width={704}
+                              height={528}
+                              className="aspect-[4/3] w-full rounded-lg border border-outline-variant bg-background object-contain"
+                            />
+                          ) : (
+                            // La foto la manda el cliente. Hasta entonces el hueco se
+                            // muestra rotulado: un vacío marcado es preferible a una
+                            // ficha que finge estar completa. Acá el pie va dentro del
+                            // marco y no debajo, porque es el propio rótulo del hueco.
+                            <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-outline-variant bg-surface-container px-6 text-center">
+                              <span className="text-label-xs font-mono uppercase text-primary">
+                                Foto pendiente
+                              </span>
+                              <span className="text-body-sm text-on-surface-variant">
+                                {familia.pieDeFoto}
+                              </span>
+                            </div>
+                          )}
+                          {familia.imagenDisponible && (
+                            <figcaption className="text-body-sm mt-3 text-on-surface-variant">
                               {familia.pieDeFoto}
-                            </span>
-                          </div>
-                        )}
-                      </figure>
-                    )}
+                            </figcaption>
+                          )}
+                        </figure>
+                      )}
 
-                    <div className="flex flex-1 flex-col p-6 md:p-8">
-                      <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
-                        <div className="min-w-0">
+                      <div
+                        className={familia.pieDeFoto ? 'md:col-span-8' : 'md:col-span-12'}
+                      >
+                        <header>
                           <h3 className="text-headline-lg-mobile md:text-headline-lg text-on-surface">
                             {familia.nombre}
                           </h3>
@@ -141,62 +152,49 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                               {familia.subtitulo}
                             </p>
                           )}
-                        </div>
 
-                        {familia.destacados.length > 0 && (
-                          // Los badges alternan azul sólido y azul pastel para que el
-                          // primero —el dato que más pesa— gane sin recurrir a un
-                          // color nuevo. Van en el bloque de texto y no sobre la foto:
-                          // encima de una foto oscura, como la de conexiones, dejarían
-                          // de leerse.
-                          <ul className="flex flex-wrap gap-2 md:justify-end">
-                            {familia.destacados.map((dato, j) => (
-                              <li
-                                key={dato}
-                                className={`text-label-xs rounded-full px-3 py-1.5 font-mono uppercase ${
-                                  j === 0
-                                    ? 'bg-primary text-on-primary'
-                                    : 'bg-primary-tint text-primary'
-                                }`}
-                              >
-                                {dato}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </header>
+                          {familia.destacados.length > 0 && (
+                            // Los badges alternan azul sólido y azul pastel para que el
+                            // primero —el dato que más pesa— gane sin recurrir a un
+                            // color nuevo.
+                            <ul className="mt-4 flex flex-wrap gap-2">
+                              {familia.destacados.map((dato, j) => (
+                                <li
+                                  key={dato}
+                                  className={`text-label-xs rounded-full px-3 py-1.5 font-mono uppercase ${
+                                    j === 0
+                                      ? 'bg-primary text-on-primary'
+                                      : 'bg-primary-tint text-primary'
+                                  }`}
+                                >
+                                  {dato}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </header>
 
-                      <dl className="mt-6 overflow-hidden rounded-md border border-outline-variant">
-                        {familia.items.map((spec, j) => (
-                          <div
-                            key={spec.valor}
-                            className={`flex gap-3 border-l-[3px] border-primary px-4 py-3 sm:gap-4 ${
-                              j % 2 === 1 ? 'bg-surface-container' : 'bg-background'
-                            }`}
-                          >
-                            <span
-                              aria-hidden="true"
-                              className="text-label-sm mt-0.5 shrink-0 font-mono text-primary"
+                        {/* Dos columnas de campo/valor: una tabla de nueve filas, como
+                            la de la guillotina, se lee de un vistazo en vez de caer a
+                            lo largo. Se apila en una sola columna bajo sm. */}
+                        <dl className="mt-7 grid gap-x-10 sm:grid-cols-2">
+                          {familia.items.map((spec) => (
+                            <div
+                              key={spec.valor}
+                              className="flex gap-4 border-t border-outline-variant py-3"
                             >
-                              &gt;
-                            </span>
-                            <div className="min-w-0 flex-1 sm:flex sm:gap-4">
                               {spec.campo && (
-                                <dt className="text-label-xs shrink-0 pt-0.5 font-semibold uppercase tracking-wider text-primary sm:w-36">
+                                <dt className="text-label-xs w-28 shrink-0 pt-1 font-semibold uppercase tracking-wider text-primary">
                                   {spec.campo}
                                 </dt>
                               )}
-                              <dd
-                                className={`text-body-sm min-w-0 text-on-surface ${
-                                  spec.campo ? 'mt-1 sm:mt-0' : ''
-                                }`}
-                              >
+                              <dd className="text-body-sm min-w-0 flex-1 text-on-surface">
                                 {spec.valor}
                               </dd>
                             </div>
-                          </div>
-                        ))}
-                      </dl>
+                          ))}
+                        </dl>
+                      </div>
                     </div>
                   </article>
                 </Reveal>
