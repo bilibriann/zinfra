@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { z } from 'zod'
 import { sendCotizacion } from '@/lib/forms'
 import { siteConfig, esPendiente } from '@/config'
@@ -41,6 +41,27 @@ export default function CotizacionForm() {
   const [errores, setErrores] = useState<Errores>({})
   const [estado, setEstado] = useState<Estado>('idle')
   const [mensajeError, setMensajeError] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
+
+  // Las fichas de familia enlazan aquí con ?linea=…&modelo=… para que el
+  // formulario llegue con la línea elegida y la familia escrita. Se lee en el
+  // navegador y no con searchParams porque el sitio es export estático: el HTML
+  // se genera una vez, sin query. Una línea que no está en LINEAS se ignora.
+  useEffect(() => {
+    const form = formRef.current
+    if (!form) return
+    const params = new URLSearchParams(window.location.search)
+    const linea = params.get('linea')
+    const modelo = params.get('modelo')
+    const producto = form.elements.namedItem('producto')
+    const marcaModelo = form.elements.namedItem('marcaModelo')
+    if (linea && producto instanceof HTMLSelectElement && LINEAS.some((l) => l.valor === linea)) {
+      producto.value = linea
+    }
+    if (modelo && marcaModelo instanceof HTMLInputElement) {
+      marcaModelo.value = modelo.slice(0, 120)
+    }
+  }, [])
 
   async function alEnviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault()
@@ -92,7 +113,7 @@ export default function CotizacionForm() {
     // El paso entre bloques (32px) es mayor que el paso entre campos (20px): sin
     // rótulos, ese salto es lo único que separa los datos de contacto de los del
     // requerimiento.
-    <form onSubmit={alEnviar} noValidate className="space-y-8">
+    <form ref={formRef} onSubmit={alEnviar} noValidate className="space-y-8">
       <input
         type="text"
         name="botcheck"

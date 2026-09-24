@@ -13,7 +13,8 @@
 
   /* Zinfra — paleta oficial de marca.
      Regla 60-30-10: 60% blanco y gris claro, 30% azul y gris carbón,
-     10% naranja. El naranja es punto focal exclusivo: solo CTA y acentos. */
+     10% naranja. El naranja es punto focal exclusivo: solo CTA y acentos. El verde
+     petróleo (tertiary) es un acento menor dentro de ese 10%, nunca fondo ni CTA. */
 
   /* Azul Zinfra — el del hero, único azul del sitio: hero, header, bandas, footer,
      títulos, links, datos de ficha y CTA. Sin degradados. */
@@ -28,10 +29,20 @@
   --color-on-accent: #2a2a2a;
   --color-accent-container: #e88a08; /* hover/pressed del CTA */
 
-  --color-tertiary: #ff9c1a;
-  --color-on-tertiary: #2a2a2a;
-  --color-tertiary-container: #ffffff;
-  --color-on-tertiary-container: var(--marca-cuerpo);
+  /* Verde petróleo — acento secundario, solo detalles sobre fondo claro (líneas,
+     bullets). 4.9:1 sobre blanco y con texto blanco encima; sobre el azul da ~3:1,
+     así que en las bandas azules no entra y ahí sigue el naranja. */
+  --color-tertiary: #0e7c86;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: color-mix(in srgb, #0e7c86 10%, white);
+  --color-on-tertiary-container: #0e7c86;
+
+  /* Amarillo señal — fondo de una sola banda del home, para dar un punto de color
+     fuerte sin tocar el naranja del CTA. Más limón que el naranja para no
+     confundirse con él. Sobre él, texto carbón (~12:1) y acentos en azul: el
+     blanco, el verde y el naranja no se leen encima. */
+  --color-signal: #ffd000;
+  --color-on-signal: #2a2a2a;
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;

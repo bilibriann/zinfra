@@ -29,14 +29,15 @@ const RAZONES = [
 ]
 
 // Una línea, un color del manual. Alternan claro y oscuro para que ninguna banda
-// quede pegada a otra del mismo peso; el naranja no es fondo de nada — solo ordinal,
-// bullet y enlace, que es su papel del 10%.
+// quede pegada a otra del mismo peso; el naranja no es fondo de nada — solo bullet y
+// enlace sobre azul, que es su papel del 10%. En las bandas claras el bullet va en
+// verde petróleo: sobre azul ese verde no alcanza contraste.
 const TONOS_LINEA = [
   {
     fondo: 'bg-background',
     titulo: 'text-on-surface',
     texto: 'text-on-surface-variant',
-    acento: 'text-accent',
+    acento: 'text-tertiary',
     enlace: 'text-primary',
     regla: 'border-outline-variant',
   },
@@ -49,12 +50,15 @@ const TONOS_LINEA = [
     regla: 'border-white/25',
   },
   {
-    fondo: 'bg-surface-container',
-    titulo: 'text-on-surface',
-    texto: 'text-on-surface-variant',
-    acento: 'text-accent',
+    // La banda amarilla: sigue la alternancia claro/oscuro y es el único bloque
+    // de color fuerte del home. Texto carbón y acentos azules, que son los que
+    // se leen sobre amarillo.
+    fondo: 'bg-signal',
+    titulo: 'text-on-signal',
+    texto: 'text-on-signal',
+    acento: 'text-primary',
     enlace: 'text-primary',
-    regla: 'border-outline-variant',
+    regla: 'border-on-signal/20',
   },
   {
     fondo: 'bg-primary',
@@ -66,11 +70,15 @@ const TONOS_LINEA = [
   },
 ]
 
-// Foto de ejemplo a la izquierda, a tamaño moderado, y texto con características a
-// la derecha. En móvil se apilan: foto arriba. El marco lleva fondo blanco propio
-// porque las fotos de catálogo vienen sobre blanco y algunas bandas son azules, y
-// recorta el zoom del hover para que la foto no se salga.
-const GRILLA_LINEA = 'grid gap-8 lg:grid-cols-[24rem_1fr] lg:items-center lg:gap-16'
+// Foto de ejemplo a tamaño moderado y texto con características al lado. La foto
+// cambia de lado en cada línea (izquierda, derecha, izquierda…) para que las
+// cuatro bandas no se lean como una lista. En móvil se apilan siempre con la foto
+// arriba. El marco lleva fondo blanco propio porque las fotos de catálogo vienen
+// sobre blanco y algunas bandas son de color, y recorta el zoom del hover para que
+// la foto no se salga.
+const GRILLA_LINEA = 'grid gap-8 lg:items-center lg:gap-16'
+const COLUMNAS_FOTO_IZQUIERDA = 'lg:grid-cols-[24rem_1fr]'
+const COLUMNAS_FOTO_DERECHA = 'lg:grid-cols-[1fr_24rem]'
 
 const MARCO_FOTO =
   'aspect-[4/3] w-full max-w-sm overflow-hidden rounded-lg border border-outline-variant bg-white'
@@ -125,6 +133,7 @@ export default async function Home() {
 
       {servicios.map((servicio, i) => {
         const tono = TONOS_LINEA[i % TONOS_LINEA.length]
+        const fotoDerecha = i % 2 === 1
         return (
           <section key={servicio.slug} className={tono.fondo}>
             <Link
@@ -133,9 +142,15 @@ export default async function Home() {
             >
               <div className="mx-auto max-w-7xl px-4 py-14 md:px-12 lg:py-20">
                 <Reveal>
-                  <div className={GRILLA_LINEA}>
+                  <div
+                    className={`${GRILLA_LINEA} ${fotoDerecha ? COLUMNAS_FOTO_DERECHA : COLUMNAS_FOTO_IZQUIERDA}`}
+                  >
                     {servicio.imagenDisponible && (
-                      <div className={MARCO_FOTO}>
+                      // La foto va primero en el HTML para quedar arriba en móvil; en
+                      // escritorio la fila fija la pone a la derecha cuando toca.
+                      <div
+                        className={`${MARCO_FOTO} ${fotoDerecha ? 'lg:col-start-2 lg:row-start-1 lg:justify-self-end' : ''}`}
+                      >
                         <Image
                           src={servicio.imagen}
                           alt={`Producto de la línea ${servicio.titulo}`}
@@ -145,7 +160,11 @@ export default async function Home() {
                         />
                       </div>
                     )}
-                    <div className="lg:col-start-2">
+                    <div
+                      className={
+                        fotoDerecha ? 'lg:col-start-1 lg:row-start-1' : 'lg:col-start-2'
+                      }
+                    >
                       <h3 className={`text-display md:text-display-md ${tono.titulo}`}>
                         {servicio.titulo}
                       </h3>
@@ -227,7 +246,7 @@ export default async function Home() {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {RAZONES.map((razon) => (
             <Reveal key={razon.titulo}>
-              <div className="h-full border-t-2 border-accent pt-5">
+              <div className="h-full border-t-2 border-tertiary pt-5">
                 <h3 className="text-headline-lg-mobile text-on-surface">
                   {razon.titulo}
                 </h3>
@@ -238,38 +257,39 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-primary text-on-primary">
+      {/* Franja final en amarillo señal, igual que en las páginas de servicio. Todo
+          en carbón y acentos azules; el CTA va en azul porque el naranja se pierde
+          sobre amarillo. */}
+      <section className="bg-signal text-on-signal">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-12">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-xl">
               <h2 className="text-headline-lg-mobile md:text-headline-xl">
                 ¿Buscas un equipo específico?
               </h2>
-              <p className="text-body-md mt-3 text-white/80">
+              <p className="text-body-md mt-3">
                 Envíanos tu requerimiento y nuestro equipo evaluará la alternativa
                 adecuada para tu aplicación.
               </p>
               <div className="mt-6">
-                <ButtonLink href="/contacto" variant="primary">
+                <ButtonLink href="/contacto" variant="azul">
                   Solicita tu cotización
                 </ButtonLink>
               </div>
             </div>
-            <div className="rounded-md border border-white/20 p-6">
-              <p className="text-label-sm font-mono uppercase text-white/60">
-                Puedes indicarnos
-              </p>
-              <ul className="text-body-md mt-4 space-y-2 text-white/80">
+            <div className="rounded-md border border-on-signal/25 p-6">
+              <p className="text-label-sm font-mono uppercase">Puedes indicarnos</p>
+              <ul className="text-body-md mt-4 space-y-2">
                 {DATOS_COTIZACION.map((item) => (
                   <li key={item} className="flex gap-2">
-                    <span aria-hidden="true" className="text-accent">
+                    <span aria-hidden="true" className="text-primary">
                       +
                     </span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
-              <p className="text-body-md mt-6 text-white/60">
+              <p className="text-body-md mt-6">
                 WhatsApp {siteConfig.contacto.whatsapp} · Santiago de Chile
               </p>
             </div>

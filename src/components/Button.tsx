@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react'
 
-type Variant = 'primary' | 'white'
+type Variant = 'primary' | 'white' | 'azul'
 
 // El levantar-y-asentar es el gesto compartido de todos los CTA: sube medio
 // paso en hover con una sombra teñida de azul de marca (nunca negra) y vuelve
@@ -15,6 +15,9 @@ const variants: Record<Variant, string> = {
     'bg-accent text-on-accent hover:bg-accent-container hover:shadow-lg hover:shadow-accent/30',
   white:
     'bg-white text-primary hover:bg-white/85 hover:shadow-lg hover:shadow-primary/30',
+  // Para las franjas amarillas: el naranja sobre amarillo casi no se distingue
+  // (luminancias parecidas), el azul contrasta fuerte.
+  azul: 'bg-primary text-on-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30',
 }
 
 function buttonClass(variant: Variant, className: string) {

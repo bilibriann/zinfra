@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import { assetPath } from '@/lib/assetPath'
 import { getAllServicios, getServicio } from '@/lib/servicios'
@@ -11,13 +12,15 @@ export const dynamicParams = false
 
 // Cada familia es una franja de catálogo a todo el ancho: foto a un tercio con su
 // pie, badges con los dos o tres datos que deciden la compra, y las
-// especificaciones en dos columnas de campo/valor. La foto cambia de lado en cada
-// familia. Se hojea como el catálogo impreso y se escanea como una tabla, que es
-// como un comprador técnico lee.
+// especificaciones en dos columnas de campo/valor. La foto va siempre a la
+// izquierda, así el ojo encuentra el producto en el mismo lugar en cada familia.
+// Se hojea como el catálogo impreso y se escanea como una tabla, que es como un
+// comprador técnico lee.
 //
 // No son tarjetas: nada va encajonado ni ensombrecido. Lo único que separa una
-// familia de la siguiente es una línea de un píxel, que es lo que hace una hoja de
-// catálogo y no un tablero de fichas.
+// familia de la siguiente es una línea, que es lo que hace una hoja de catálogo y no
+// un tablero de fichas. Va a 2px y más intensa que las líneas de las filas de
+// especificaciones: con el mismo trazo, el corte entre familias se perdía entre ellas.
 //
 // El naranja de marca no entra en la ficha. La 60-30-10 lo reserva para el 10% de
 // punto focal, y un bloque de datos densos no compite con el CTA: dentro de la
@@ -91,13 +94,18 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
 
           <div className="mt-12">
             {servicio.familias.map((familia, i) => {
-              // La foto cambia de lado en cada familia. Alternar es lo que evita que
-              // ocho franjas iguales se lean como una lista: el ojo vuelve al borde
-              // opuesto en cada una y reconoce dónde empieza la siguiente.
-              const fotoDerecha = i % 2 === 1
               return (
                 <Reveal key={familia.nombre}>
-                  <article className="border-t border-outline-variant py-10 first:border-t-0 first:pt-0 md:py-14 md:first:pt-0">
+                  {/* La primera familia va sin línea arriba. Se decide por índice y no
+                      con `first:`, porque cada <article> es el primer hijo de su
+                      propio <Reveal> y `first:` le quitaba la línea a todas. */}
+                  <article
+                    className={
+                      i === 0
+                        ? 'pb-12 md:pb-16'
+                        : 'border-t-2 border-primary/35 py-12 md:py-16'
+                    }
+                  >
                     <div className="grid items-start gap-8 md:grid-cols-12 md:gap-10 lg:gap-12">
                       {familia.pieDeFoto && (
                         // El tope de ancho es para el móvil, donde la franja se apila:
@@ -105,7 +113,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                         // en la fila de al lado, que es lo contrario de lo que busca
                         // una franja de catálogo.
                         <figure
-                          className={`w-full max-w-[22rem] md:col-span-4 md:max-w-none ${fotoDerecha ? 'md:order-last' : ''}`}
+                          className="w-full max-w-[22rem] md:col-span-4 md:max-w-none"
                         >
                           {familia.imagenDisponible ? (
                             // `contain` y no `cover`: la foto de catálogo ya viene
@@ -194,6 +202,30 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                             </div>
                           ))}
                         </dl>
+
+                        {/* Enlaces de texto y no botones: el CTA fuerte ya está en el
+                            hero y en la banda final, aquí solo se deja la salida a
+                            mano. La cotización llega con línea y familia rellenas; el
+                            catálogo es el del servicio, no hay uno por familia. */}
+                        <div className="text-body-sm mt-6 flex flex-wrap gap-x-8 gap-y-3 font-semibold text-primary">
+                          <Link
+                            href={{
+                              pathname: '/contacto',
+                              query: { linea: servicio.titulo, modelo: familia.nombre },
+                            }}
+                            className="underline-offset-4 hover:underline"
+                          >
+                            Solicitar cotización <span aria-hidden="true">→</span>
+                          </Link>
+                          <a
+                            href={assetPath(servicio.catalogo)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline-offset-4 hover:underline"
+                          >
+                            Descargar catálogo <span aria-hidden="true">↓</span>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </article>
@@ -204,19 +236,21 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
         </div>
       </section>
 
-      <section className="bg-primary text-on-primary">
+      {/* Franja final en amarillo señal, igual que en el home. El CTA va en azul
+          porque el naranja se pierde sobre amarillo. */}
+      <section className="bg-signal text-on-signal">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 md:flex-row md:items-center md:justify-between md:px-12">
           <div>
             <h2 className="text-headline-lg-mobile md:text-headline-lg">
               ¿Buscas un equipo específico?
             </h2>
-            <p className="text-body-md mt-2 max-w-xl text-white/70">
+            <p className="text-body-md mt-2 max-w-xl">
               Indícanos producto, marca o modelo, cantidad y aplicación. Evaluamos la
               alternativa adecuada para tu proceso.
             </p>
           </div>
           <div className="shrink-0">
-            <ButtonLink href="/contacto" variant="primary">
+            <ButtonLink href="/contacto" variant="azul">
               Solicita tu cotización
             </ButtonLink>
           </div>
