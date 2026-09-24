@@ -21,10 +21,10 @@ export const siteConfig: SiteConfig = {
   ],
   contacto: {
     email: CONTACT_EMAIL,
-    // Único canal confirmado por el cliente. El teléfono fijo, la dirección y el
-    // horario siguen pendientes: van como TODO hasta que lleguen.
+    // Confirmados por el cliente: WhatsApp y dirección de la oficina. El horario
+    // sigue pendiente: va como TODO hasta que llegue.
     telefono: '+56 9 2631 3009',
-    direccion: 'TODO — Santiago de Chile',
+    direccion: 'Los Militares 5620, oficina 905, Las Condes, Santiago',
     horario: 'TODO',
     whatsapp: '+56 9 2631 3009',
     sedes: [{ ciudad: 'Santiago de Chile', telefono: '+56 9 2631 3009' }],

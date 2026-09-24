@@ -96,7 +96,18 @@ export default function ContactoPage() {
                   <dt className="text-label-sm font-mono uppercase text-on-surface-variant">
                     Dirección
                   </dt>
-                  <dd className="text-body-md mt-1 text-on-surface">{direccion}</dd>
+                  <dd className="text-body-md mt-1">
+                    {/* Enlace a la búsqueda de Maps y no a un pin fijo: con la
+                        dirección escrita basta, y no hay coordenadas que mantener. */}
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-primary hover:underline"
+                    >
+                      {direccion}
+                    </a>
+                  </dd>
                 </div>
               )}
 
