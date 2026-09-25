@@ -88,6 +88,13 @@ const COLUMNAS_FOTO_DERECHA = 'lg:grid-cols-[1fr_24rem]'
 const MARCO_FOTO =
   'aspect-[4/3] w-full max-w-sm overflow-hidden rounded-lg border border-outline-variant bg-white'
 
+// Sombra del texto del hero: la foto es clara a la izquierda (casco, fondo
+// iluminado) y el blanco se perdía encima. Difusa y teñida del azul de marca, como
+// el resto de las sombras del sitio; va en cada texto y no en el contenedor porque
+// text-shadow se hereda y ensuciaría el botón.
+const SOMBRA_HERO =
+  '[text-shadow:0_2px_16px_color-mix(in_srgb,var(--marca-cuerpo)_75%,transparent),0_1px_3px_color-mix(in_srgb,var(--marca-cuerpo)_60%,transparent)]'
+
 const DATOS_COTIZACION = [
   'Producto requerido',
   'Marca o modelo',
@@ -112,13 +119,17 @@ export default async function Home() {
         />
         <div className="mx-auto max-w-7xl px-4 py-20 md:px-12 lg:py-28">
           <Reveal>
-            <p className="text-label-sm font-mono uppercase text-white/60">
+            <p
+              className={`text-label-sm font-mono uppercase text-white/60 ${SOMBRA_HERO}`}
+            >
               Instrumentación · Neumática · Vapor · Válvulas
             </p>
-            <h1 className="text-display md:text-display-md lg:text-display-lg mt-4 max-w-4xl">
+            <h1
+              className={`text-display md:text-display-md lg:text-display-lg mt-4 max-w-4xl ${SOMBRA_HERO}`}
+            >
               Equipos de medición, control y conducción para la industria
             </h1>
-            <p className="text-body-md mt-6 max-w-2xl text-white/80">
+            <p className={`text-body-md mt-6 max-w-2xl text-white/80 ${SOMBRA_HERO}`}>
               En ZINFRA Solutions entregamos soluciones y equipos para medición, control y
               conducción de procesos industriales. Trabajamos con empresas de todo Chile,
               con una atención orientada a las necesidades específicas de cada proceso.
