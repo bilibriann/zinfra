@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       >
         <SmoothScroll />
         <Header servicios={enlacesServicios} />
-        <main className="flex-1 pt-20">{children}</main>
+        <main className="flex-1 pt-14">{children}</main>
         <Footer />
       </body>
     </html>

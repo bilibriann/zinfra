@@ -81,7 +81,7 @@ export function Header({ servicios }: Props) {
             'bg-primary fixed top-0 z-50 w-full border-b border-white/10 transition-colors duration-300'
       }
     >
-      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-12">
+      <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:px-12">
         <Link href="/" className="shrink-0">
           {/* Dos archivos, no un filtro: el original es opaco y `invert` lo volvía un
               rectángulo blanco. La versión clara la deriva scripts/logo-transparente.mjs. */}
@@ -91,7 +91,7 @@ export function Header({ servicios }: Props) {
             width={400}
             height={180}
             priority
-            className="h-12 w-auto object-contain transition-all duration-300"
+            className="h-9 w-auto object-contain transition-all duration-300"
           />
         </Link>
         <ul

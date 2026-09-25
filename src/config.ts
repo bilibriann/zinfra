@@ -11,7 +11,7 @@ export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'TODO@zinf
 export const siteConfig: SiteConfig = {
   name: 'ZINFRA Solutions',
   description:
-    'Instrumentación, neumática, vapor y válvulas para la industria. Distribuidor DE WIT en Chile.',
+    'Instrumentación, neumática, vapor y válvulas para la industria. Distribuidor DE WIT y Watson McDaniel en Chile.',
   url: 'https://TODO.cl',
   nav: [
     { label: 'Inicio', href: '/' },

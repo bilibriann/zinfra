@@ -5,25 +5,30 @@ import { getAllServicios } from '@/lib/servicios'
 import { ButtonLink } from '@/components/Button'
 import { Reveal } from '@/components/Reveal'
 import { siteConfig } from '@/config'
+import { BoltIcon, GearIcon, UbicacionIcon, WrenchIcon } from '@/components/icons'
 
 const RAZONES = [
   {
     titulo: 'Atención técnica',
+    Icono: WrenchIcon,
     texto:
       'Te ayudamos a identificar el producto adecuado según tu aplicación y requerimientos.',
   },
   {
     titulo: 'Cobertura en todo Chile',
+    Icono: UbicacionIcon,
     texto:
       'Atendemos requerimientos industriales de empresas ubicadas a lo largo del territorio nacional.',
   },
   {
     titulo: 'Soluciones industriales',
+    Icono: GearIcon,
     texto:
       'No se trata solamente de vender un producto: buscamos la alternativa adecuada para cada necesidad.',
   },
   {
     titulo: 'Respuesta directa',
+    Icono: BoltIcon,
     texto: 'Atendemos tus requerimientos de manera rápida y orientada a resolver.',
   },
 ]
@@ -50,9 +55,9 @@ const TONOS_LINEA = [
     regla: 'border-white/25',
   },
   {
-    // La banda amarilla: sigue la alternancia claro/oscuro y es el único bloque
-    // de color fuerte del home. Texto carbón y acentos azules, que son los que
-    // se leen sobre amarillo.
+    // La banda amarilla: sigue la alternancia claro/oscuro y, con la franja final,
+    // es uno de los dos bloques de color fuerte del home. Texto carbón y acentos
+    // azules, que son los que se leen sobre amarillo.
     fondo: 'bg-signal',
     titulo: 'text-on-signal',
     texto: 'text-on-signal',
@@ -96,7 +101,15 @@ export default async function Home() {
 
   return (
     <>
-      <section className="bg-primary text-on-primary">
+      <section className="relative isolate overflow-hidden bg-primary text-on-primary">
+        <Image
+          src="/images/hero/zinfra-home3.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="-z-10 object-cover object-right"
+        />
         <div className="mx-auto max-w-7xl px-4 py-20 md:px-12 lg:py-28">
           <Reveal>
             <p className="text-label-sm font-mono uppercase text-white/60">
@@ -114,6 +127,63 @@ export default async function Home() {
               <ButtonLink href="/contacto" variant="primary">
                 Solicita una cotización
               </ButtonLink>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-12 lg:py-24">
+        <Reveal>
+          <h2 className="text-headline-lg-mobile md:text-headline-xl text-on-surface">
+            ¿Por qué ZINFRA Solutions?
+          </h2>
+        </Reveal>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {RAZONES.map((razon) => (
+            <Reveal key={razon.titulo}>
+              <div className="h-full border-t-2 border-tertiary pt-5">
+                {/* El ícono mide lo mismo que el título (1em del h3) y va en su línea. */}
+                <h3 className="text-headline-lg-mobile flex items-center gap-3 text-on-surface">
+                  <razon.Icono
+                    aria-hidden="true"
+                    className="h-[1.1em] w-[1.1em] shrink-0 text-primary"
+                  />
+                  {razon.titulo}
+                </h3>
+                <p className="text-body-md mt-3 text-on-surface-variant">{razon.texto}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-surface-container">
+        <div className="mx-auto max-w-7xl px-4 py-16 md:px-12">
+          <Reveal>
+            <p className="text-label-sm font-mono uppercase text-on-surface-variant">
+              Marcas
+            </p>
+            <h2 className="text-headline-lg-mobile md:text-headline-xl mt-3 text-on-surface">
+              DE WIT · Watson McDaniel
+            </h2>
+            <p className="text-body-md mt-4 max-w-2xl text-on-surface-variant">
+              Trabajamos con productos DE WIT y equipos Watson McDaniel, incorporando
+              soluciones orientadas a aplicaciones industriales de medición, control,
+              vapor y manejo de procesos. Cada línea tiene su catálogo disponible para
+              descarga.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {servicios.map((servicio) => (
+                <a
+                  key={servicio.slug}
+                  href={assetPath(servicio.catalogo)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-body-md rounded-md border border-outline-variant bg-background px-4 py-2 font-semibold text-primary transition-colors duration-200 hover:bg-surface-container-high"
+                >
+                  Catálogo {servicio.titulo} ↓
+                </a>
+              ))}
             </div>
           </Reveal>
         </div>
@@ -206,57 +276,6 @@ export default async function Home() {
         )
       })}
 
-      <section className="bg-surface-container">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:px-12">
-          <Reveal>
-            <p className="text-label-sm font-mono uppercase text-on-surface-variant">
-              Marca
-            </p>
-            <h2 className="text-headline-lg-mobile md:text-headline-xl mt-3 text-on-surface">
-              DE WIT
-            </h2>
-            <p className="text-body-md mt-4 max-w-2xl text-on-surface-variant">
-              Trabajamos con productos DE WIT, incorporando soluciones orientadas a
-              aplicaciones industriales de medición, control y manejo de procesos. Cada
-              línea tiene su catálogo disponible para descarga.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {servicios.map((servicio) => (
-                <a
-                  key={servicio.slug}
-                  href={assetPath(servicio.catalogo)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-body-md rounded-md border border-outline-variant bg-background px-4 py-2 font-semibold text-primary transition-colors duration-200 hover:bg-surface-container-high"
-                >
-                  Catálogo {servicio.titulo} ↓
-                </a>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-12 lg:py-24">
-        <Reveal>
-          <h2 className="text-headline-lg-mobile md:text-headline-xl text-on-surface">
-            ¿Por qué ZINFRA Solutions?
-          </h2>
-        </Reveal>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {RAZONES.map((razon) => (
-            <Reveal key={razon.titulo}>
-              <div className="h-full border-t-2 border-tertiary pt-5">
-                <h3 className="text-headline-lg-mobile text-on-surface">
-                  {razon.titulo}
-                </h3>
-                <p className="text-body-md mt-3 text-on-surface-variant">{razon.texto}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
       {/* Franja final en amarillo señal, igual que en las páginas de servicio. Todo
           en carbón y acentos azules; el CTA va en azul porque el naranja se pierde
           sobre amarillo. */}
@@ -290,7 +309,7 @@ export default async function Home() {
                 ))}
               </ul>
               <p className="text-body-md mt-6">
-                WhatsApp {siteConfig.contacto.whatsapp} · Santiago de Chile
+                WhatsApp {siteConfig.contacto.whatsapp} · Las Condes, Santiago
               </p>
             </div>
           </div>

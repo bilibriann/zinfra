@@ -8,7 +8,7 @@ descripcion: >-
   reductoras de presión, juntas rotativas e instrumentación de presión y
   temperatura para servicio de vapor.
 alcance: Hasta 600 PSIG y 426 °C según equipo. Clases 150, 300 y 600.
-marca: DE WIT
+marca: DE WIT · Watson McDaniel
 catalogo: /catalogos/Vapor.pdf
 imagen: /images/servicios/vapor.webp
 familias:

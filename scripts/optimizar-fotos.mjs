@@ -79,3 +79,21 @@ for (const [nombre, origen] of MAPA) {
     `${nombre.padEnd(36)} ${String(kb).padStart(4)} kB  <- ${path.basename(origen)}`
   )
 }
+
+// Fondo del hero: foto ambiental, no de producto. Va a sangre con `cover`, así
+// que se conserva su proporción y solo se limita el ancho.
+{
+  const nombre = 'hero/zinfra-home3.webp'
+  const origen = 'assets-originales/background/zinfra home 3.jpeg'
+  const salida = path.join(DESTINO, nombre)
+  await mkdir(path.dirname(salida), { recursive: true })
+  const info = await sharp(origen)
+    .resize({ width: 1920, withoutEnlargement: true })
+    .webp({ quality: 80 })
+    .toFile(salida)
+
+  const kb = Math.round(info.size / 1024)
+  console.log(
+    `${nombre.padEnd(36)} ${String(kb).padStart(4)} kB  <- ${path.basename(origen)}`
+  )
+}

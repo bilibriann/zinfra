@@ -53,7 +53,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
   return (
     <>
       <section className="bg-primary text-on-primary">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:px-12 lg:py-24">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-12 lg:grid-cols-[1fr_24rem] lg:items-center lg:py-24">
           <Reveal>
             <h1 className="text-display md:text-display-md max-w-3xl">
               {servicio.titulo}
@@ -75,6 +75,23 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
               </a>
             </div>
           </Reveal>
+          {/* Foto de ejemplo de la línea, la misma de su banda en el home. En móvil
+              va bajo los botones, topada en ancho para no ocupar toda la pantalla. El
+              marco blanco es porque las fotos de catálogo vienen sobre blanco. */}
+          {servicio.imagenDisponible && (
+            <Reveal>
+              <div className="aspect-[4/3] w-full max-w-sm overflow-hidden rounded-lg bg-white lg:max-w-none">
+                <Image
+                  src={servicio.imagen}
+                  alt={`Producto de la línea ${servicio.titulo}`}
+                  width={1200}
+                  height={900}
+                  priority
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </Reveal>
+          )}
         </div>
       </section>
 
@@ -112,9 +129,7 @@ export default async function ServicioPage(props: PageProps<'/[servicio]'>) {
                         // sin él la foto pasa a ancho completo y queda más grande que
                         // en la fila de al lado, que es lo contrario de lo que busca
                         // una franja de catálogo.
-                        <figure
-                          className="w-full max-w-[22rem] md:col-span-4 md:max-w-none"
-                        >
+                        <figure className="w-full max-w-[22rem] md:col-span-4 md:max-w-none">
                           {familia.imagenDisponible ? (
                             // `contain` y no `cover`: la foto de catálogo ya viene
                             // encuadrada a 4:3 sobre blanco y recortarla le cortaría

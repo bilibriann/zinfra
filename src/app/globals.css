@@ -179,10 +179,10 @@ body {
     overflow: hidden;
   }
 
-  /* El header fijo mide 80px: evita que las anclas queden bajo él cuando el
+  /* El header fijo mide 56px: evita que las anclas queden bajo él cuando el
      navegador salta sin pasar por Lenis (carga directa con #hash). */
   [id] {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 4.5rem;
   }
 
   :focus-visible {

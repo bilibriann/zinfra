@@ -11,7 +11,7 @@ descripcion: >-
   asiento de cero fuga. La línea DE WIT completa la conducción con bola, globo,
   aguja y seguridad en bronce, acero al carbón y acero inoxidable.
 alcance: De 1/8" a 36". Hasta 10.000 PSIG en válvula de aguja y clase 600 en guillotina.
-marca: DE WIT · SUHKANG
+marca: DE WIT · Watson McDaniel · SUHKANG
 catalogo: /catalogos/Valve.pdf
 imagen: /images/servicios/valvulas.webp
 familias:
